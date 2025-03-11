@@ -9,15 +9,19 @@ import (
 	"net/http"
 )
 
+type HTTPDoer interface {
+	Do(*http.Request) (*http.Response, error)
+}
+
 // Client представляет клиент для работы с API
 type Client struct {
-	client *http.Client
+	httpClient HTTPDoer
 }
 
 // NewClient создает новый экземпляр клиента
 func NewClient() *Client {
 	return &Client{
-		client: &http.Client{Timeout: defaultTimeout},
+		httpClient: &http.Client{Timeout: defaultTimeout},
 	}
 }
 
@@ -43,8 +47,8 @@ func (c *Client) GetSites(ctx context.Context, input GetSitesInput) (GetSitesRes
 	return resp, nil
 }
 
-// Customers выполняет запрос к методу GetCustomers
-func (c *Client) Customers(ctx context.Context, input GetCustomersInput) ([]GetCustomerResponse, error) {
+// GetCustomers  выполняет запрос к методу GetCustomers
+func (c *Client) GetCustomers(ctx context.Context, input GetCustomersInput) ([]GetCustomerResponse, error) {
 	if err := input.validate(); err != nil {
 		return []GetCustomerResponse{}, err
 	}
@@ -268,16 +272,26 @@ func (c *Client) doHTTP(ctx context.Context, method string, r request) ([]byte, 
 	req.Header.Set("apiKey", r.apiKey)
 	req.Header.Set("Content-Type", "application/json")
 
-	resp, err := c.client.Do(req)
+	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		return []byte{}, errors.WithMessage(err, "Не удалось выполнить запрос")
 	}
 
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err = Body.Close()
+		if err != nil {
 
-	if resp.StatusCode == http.StatusBadRequest {
+		}
+	}(resp.Body)
+
+	switch resp.StatusCode {
+	case http.StatusUnauthorized:
+		return []byte{}, errors.New("ошибка авторизации")
+	case http.StatusForbidden:
+		return []byte{}, errors.New("доступ запрещен")
+	case http.StatusBadRequest:
 		var buf bytes.Buffer
-		if _, err := io.Copy(&buf, resp.Body); err != nil {
+		if _, err = io.Copy(&buf, resp.Body); err != nil {
 			return []byte{}, errors.WithMessage(err, "Не удалось выполнить запрос")
 		}
 		err400 := respErr400{}
@@ -288,7 +302,7 @@ func (c *Client) doHTTP(ctx context.Context, method string, r request) ([]byte, 
 		return []byte{}, errors.New(err400.Message)
 	}
 
-	if resp.StatusCode != http.StatusOK {
+	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusCreated {
 		return []byte{}, errors.New("Не удалось выполнить запрос")
 	}
 

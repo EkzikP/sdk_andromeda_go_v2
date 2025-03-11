@@ -6,20 +6,20 @@ type (
 	GetSitesInput struct {
 		Id       string // Номер или идентификатор объекта
 		UserName string // Имя пользователя, от которого делается запрос (необязательное поле)
-		Config
+		Config   `json:"-"`
 	}
 
 	// GetCustomersInput содержит входные параметры для метода GetCustomers
 	GetCustomersInput struct {
 		SiteId   string //Идентификатор объекта, список ответственных лиц которого нужно получить. Соответствует полю Id карточки объекта
 		UserName string //Имя пользователя, от которого делается запрос (необязательное поле)
-		Config
+		Config   `json:"-"`
 	}
 	// GetCustomerInput содержит входные параметры для метода GetCustomer
 	GetCustomerInput struct {
 		Id       string //Идентификатор ответственного лица, информацию которого нужно получить
 		UserName string //Имя пользователя, от которого делается запрос (необязательное поле)
-		Config
+		Config   `json:"-"`
 	}
 
 	// PostCheckPanicInput содержит входные параметры для метода PostCheckPanic
@@ -28,28 +28,28 @@ type (
 		CheckInterval int    //Интервал в секундах, в течении которого будет продолжаться процедура проверки КТС. (необязательное поле)
 		StopOnEvent   bool   //Признак остановки проверки КТС. (необязательное поле)
 		UserName      string //Имя пользователя, от которого делается запрос (необязательное поле)
-		Config
+		Config        `json:"-"`
 	}
 
 	// GetCheckPanicInput содержит входные параметры для метода GetCheckPanic
 	GetCheckPanicInput struct {
 		CheckPanicId string //Идентификатор процедуры проверки, для которой нужно получить результат
 		UserName     string //Имя пользователя, от которого делается запрос (необязательное поле)
-		Config
+		Config       `json:"-"`
 	}
 
 	// GetUsersMyAlarmInput содержит входные параметры для метода GetUsersMyAlarm
 	GetUsersMyAlarmInput struct {
 		SiteId   string //Идентификатор объекта, список пользователей MyAlarm которого нужно получить. Соответствует полю Id карточки объекта
 		UserName string //Имя пользователя, от которого делается запрос (необязательное поле)
-		Config
+		Config   `json:"-"`
 	}
 
 	// GetUserObjectMyAlarmInput содержит входные параметры для метода GetUserObjectMyAlarm
 	GetUserObjectMyAlarmInput struct {
 		Phone    string `json:"Phone"` //Телефон пользователя MyAlarm, для которого нужно получить список объектов
 		UserName string `json:"-"`     //Имя пользователя, от которого делается запрос (необязательное поле)
-		Config
+		Config   `json:"-"`
 	}
 
 	// PutChangeUserMyAlarmInput содержит входные параметры для метода PutChangeUserMyAlarm
@@ -57,7 +57,7 @@ type (
 		CustId   string //Идентификатор пользователя
 		Role     string //Роль пользователя, допустимые значения: “unlink”, “user”, “admin”
 		UserName string //Имя пользователя, от которого делается запрос (необязательное поле)
-		Config
+		Config   `json:"-"`
 	}
 
 	// PutChangeKTSUserMyAlarmInput содержит входные параметры для метода PutChangeKTSUserMyAlarm
@@ -65,21 +65,21 @@ type (
 		CustId   string //Идентификатор пользователя
 		IsPanic  bool   //true разрешить использование КТС, false - запретить
 		UserName string //Имя пользователя, от которого делается запрос (необязательное поле)
-		Config
+		Config   `json:"-"`
 	}
 
 	// GetPartsInput содержит входные параметры для метода GetParts
 	GetPartsInput struct {
 		SiteId   string //Идентификатор пользователя
 		UserName string //Имя пользователя, от которого делается запрос (необязательное поле)
-		Config
+		Config   `json:"-"`
 	}
 
 	// GetZonesInput содержит входные параметры для метода GetZones
 	GetZonesInput struct {
 		SiteId   string //Идентификатор пользователя
 		UserName string //Имя пользователя, от которого делается запрос (необязательное поле)
-		Config
+		Config   `json:"-"`
 	}
 )
 

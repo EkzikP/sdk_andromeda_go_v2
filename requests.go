@@ -13,18 +13,27 @@ type request struct {
 	apiKey string
 }
 
+func buildURL(host, endpoint string, params map[string]string) string {
+	baseURL, _ := url.Parse(host + endpoint)
+	q := url.Values{}
+	for k, v := range params {
+		q.Add(k, v)
+	}
+	baseURL.RawQuery = q.Encode()
+	return baseURL.String()
+}
+
 // generateRequest создает запрос для метода GetSites
 func (i GetSitesInput) generateRequest() request {
-	baseURL, _ := url.Parse(i.Host + endpointGetSites)
-	param := url.Values{}
-	param.Add("id", i.Id)
+
+	param := make(map[string]string)
+	param["id"] = i.Id
 	if i.UserName != "" {
-		param.Add("userName", i.UserName)
+		param["userName"] = i.UserName
 	}
-	baseURL.RawQuery = param.Encode()
 
 	return request{
-		URL:    baseURL.String(),
+		URL:    buildURL(i.Host, endpointGetSites, param),
 		body:   []byte{},
 		apiKey: i.ApiKey,
 	}
@@ -32,16 +41,15 @@ func (i GetSitesInput) generateRequest() request {
 
 // generateRequest создает запрос для метода GetCustomers
 func (i GetCustomersInput) generateRequest() request {
-	baseURL, _ := url.Parse(i.Host + endpointGetCustomers)
-	param := url.Values{}
-	param.Add("siteId", i.SiteId)
+
+	param := make(map[string]string)
+	param["siteId"] = i.SiteId
 	if i.UserName != "" {
-		param.Add("userName", i.UserName)
+		param["userName"] = i.UserName
 	}
-	baseURL.RawQuery = param.Encode()
 
 	return request{
-		URL:    baseURL.String(),
+		URL:    buildURL(i.Host, endpointGetCustomers, param),
 		body:   []byte{},
 		apiKey: i.ApiKey,
 	}
@@ -49,16 +57,15 @@ func (i GetCustomersInput) generateRequest() request {
 
 // generateRequest создает запрос для метода GetCustomer
 func (i GetCustomerInput) generateRequest() request {
-	baseURL, _ := url.Parse(i.Host + endpointGetCustomers)
-	param := url.Values{}
-	param.Add("id", i.Id)
+
+	param := make(map[string]string)
+	param["id"] = i.Id
 	if i.UserName != "" {
-		param.Add("userName", i.UserName)
+		param["userName"] = i.UserName
 	}
-	baseURL.RawQuery = param.Encode()
 
 	return request{
-		URL:    baseURL.String(),
+		URL:    buildURL(i.Host, endpointGetCustomers, param),
 		body:   []byte{},
 		apiKey: i.ApiKey,
 	}
@@ -66,20 +73,19 @@ func (i GetCustomerInput) generateRequest() request {
 
 // generateRequest создает запрос для метода PostCheckPanic
 func (i PostCheckPanicInput) generateRequest() request {
-	baseURL, _ := url.Parse(i.Host + endpointCheckPanic)
-	param := url.Values{}
-	param.Add("siteId", i.SiteId)
-	param.Add("stopOnEvent", "True")
+
+	param := make(map[string]string)
+	param["siteId"] = i.SiteId
+	param["stopOnEvent"] = "True"
 	if i.CheckInterval != 0 {
-		param.Add("checkInterval", strconv.Itoa(i.CheckInterval))
+		param["checkInterval"] = strconv.Itoa(i.CheckInterval)
 	}
 	if i.UserName != "" {
-		param.Add("userName", i.UserName)
+		param["userName"] = i.UserName
 	}
-	baseURL.RawQuery = param.Encode()
 
 	return request{
-		URL:    baseURL.String(),
+		URL:    buildURL(i.Host, endpointCheckPanic, param),
 		body:   []byte{},
 		apiKey: i.ApiKey,
 	}
@@ -87,16 +93,15 @@ func (i PostCheckPanicInput) generateRequest() request {
 
 // generateRequest создает запрос для метода GetCheckPanic
 func (i GetCheckPanicInput) generateRequest() request {
-	baseURL, _ := url.Parse(i.Host + endpointCheckPanic)
-	param := url.Values{}
-	param.Add("checkPanicId", i.CheckPanicId)
+
+	param := make(map[string]string)
+	param["checkPanicId"] = i.CheckPanicId
 	if i.UserName != "" {
-		param.Add("userName", i.UserName)
+		param["userName"] = i.UserName
 	}
-	baseURL.RawQuery = param.Encode()
 
 	return request{
-		URL:    baseURL.String(),
+		URL:    buildURL(i.Host, endpointCheckPanic, param),
 		body:   []byte{},
 		apiKey: i.ApiKey,
 	}
@@ -104,16 +109,15 @@ func (i GetCheckPanicInput) generateRequest() request {
 
 // generateRequest создает запрос для метода GetUsersMyAlarm
 func (i GetUsersMyAlarmInput) generateRequest() request {
-	baseURL, _ := url.Parse(i.Host + endpointMyAlarm)
-	param := url.Values{}
-	param.Add("siteId", i.SiteId)
+
+	param := make(map[string]string)
+	param["siteId"] = i.SiteId
 	if i.UserName != "" {
-		param.Add("userName", i.UserName)
+		param["userName"] = i.UserName
 	}
-	baseURL.RawQuery = param.Encode()
 
 	return request{
-		URL:    baseURL.String(),
+		URL:    buildURL(i.Host, endpointMyAlarm, param),
 		body:   []byte{},
 		apiKey: i.ApiKey,
 	}
@@ -121,17 +125,16 @@ func (i GetUsersMyAlarmInput) generateRequest() request {
 
 // generateRequest создает запрос для метода PutChangeUserMyAlarm
 func (i PutChangeUserMyAlarmInput) generateRequest() request {
-	baseURL, _ := url.Parse(i.Host + endpointMyAlarm)
-	param := url.Values{}
-	param.Add("custId", i.CustId)
-	param.Add("role", i.Role)
+
+	param := make(map[string]string)
+	param["custId"] = i.CustId
+	param["role"] = i.Role
 	if i.UserName != "" {
-		param.Add("userName", i.UserName)
+		param["userName"] = i.UserName
 	}
-	baseURL.RawQuery = param.Encode()
 
 	return request{
-		URL:    baseURL.String(),
+		URL:    buildURL(i.Host, endpointMyAlarm, param),
 		body:   []byte{},
 		apiKey: i.ApiKey,
 	}
@@ -139,17 +142,16 @@ func (i PutChangeUserMyAlarmInput) generateRequest() request {
 
 // generateRequest создает запрос для метода PutChangeKTSUserMyAlarm
 func (i PutChangeKTSUserMyAlarmInput) generateRequest() request {
-	baseURL, _ := url.Parse(i.Host + endpointMyAlarm)
-	param := url.Values{}
-	param.Add("custId", i.CustId)
-	param.Add("isPanic", strconv.FormatBool(i.IsPanic))
+
+	param := make(map[string]string)
+	param["custId"] = i.CustId
+	param["isPanic"] = strconv.FormatBool(i.IsPanic)
 	if i.UserName != "" {
-		param.Add("userName", i.UserName)
+		param["userName"] = i.UserName
 	}
-	baseURL.RawQuery = param.Encode()
 
 	return request{
-		URL:    baseURL.String(),
+		URL:    buildURL(i.Host, endpointMyAlarm, param),
 		body:   []byte{},
 		apiKey: i.ApiKey,
 	}
@@ -157,16 +159,16 @@ func (i PutChangeKTSUserMyAlarmInput) generateRequest() request {
 
 // generateRequest создает запрос для метода GetUserObjectMyAlarm
 func (i GetUserObjectMyAlarmInput) generateRequest() request {
-	baseURL, _ := url.Parse(i.Host + endpointGetUserObjectMyAlarm)
-	param := url.Values{}
-	if i.UserName != "" {
-		param.Add("userName", i.UserName)
-	}
-	baseURL.RawQuery = param.Encode()
+
 	jsonData, _ := json.Marshal(i)
 
+	param := make(map[string]string)
+	if i.UserName != "" {
+		param["userName"] = i.UserName
+	}
+
 	return request{
-		URL:    baseURL.String(),
+		URL:    buildURL(i.Host, endpointGetUserObjectMyAlarm, param),
 		body:   jsonData,
 		apiKey: i.ApiKey,
 	}
@@ -174,16 +176,15 @@ func (i GetUserObjectMyAlarmInput) generateRequest() request {
 
 // generateRequest создает запрос для метода GetParts
 func (i GetPartsInput) generateRequest() request {
-	baseURL, _ := url.Parse(i.Host + endpointGetParts)
-	param := url.Values{}
-	param.Add("siteId", i.SiteId)
+
+	param := make(map[string]string)
+	param["siteId"] = i.SiteId
 	if i.UserName != "" {
-		param.Add("userName", i.UserName)
+		param["userName"] = i.UserName
 	}
-	baseURL.RawQuery = param.Encode()
 
 	return request{
-		URL:    baseURL.String(),
+		URL:    buildURL(i.Host, endpointGetParts, param),
 		body:   []byte{},
 		apiKey: i.ApiKey,
 	}
@@ -191,16 +192,15 @@ func (i GetPartsInput) generateRequest() request {
 
 // generateRequest создает запрос для метода GetZones
 func (i GetZonesInput) generateRequest() request {
-	baseURL, _ := url.Parse(i.Host + endpointGetZones)
-	param := url.Values{}
-	param.Add("siteId", i.SiteId)
+
+	param := make(map[string]string)
+	param["siteId"] = i.SiteId
 	if i.UserName != "" {
-		param.Add("userName", i.UserName)
+		param["userName"] = i.UserName
 	}
-	baseURL.RawQuery = param.Encode()
 
 	return request{
-		URL:    baseURL.String(),
+		URL:    buildURL(i.Host, endpointGetZones, param),
 		body:   []byte{},
 		apiKey: i.ApiKey,
 	}

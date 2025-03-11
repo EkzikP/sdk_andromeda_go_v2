@@ -2,21 +2,24 @@ package andromeda
 
 import "github.com/pkg/errors"
 
+func (c *Config) validateBase() error {
+	if c.ApiKey == "" {
+		return errors.New("неверно задан API ключ")
+	}
+	if c.Host == "" {
+		return errors.New("неверно задан адрес сервера")
+	}
+	return nil
+}
+
 // validate проверяет заполнение обязательных полей метода GetSites
 func (i GetSitesInput) validate() error {
 	if i.Id == "" {
 		return errors.New("неверно задан номер объекта")
 	}
 
-	if i.ApiKey == "" {
-		return errors.New("неверно задан API ключ")
-	}
+	return i.Config.validateBase()
 
-	if i.Host == "" {
-		return errors.New("неверно задан адрес сервера")
-	}
-
-	return nil
 }
 
 // validate проверяет заполнение обязательных полей метода GetCustomers
@@ -25,15 +28,8 @@ func (i GetCustomersInput) validate() error {
 		return errors.New("неверно задан номер объекта")
 	}
 
-	if i.ApiKey == "" {
-		return errors.New("неверно задан API ключ")
-	}
+	return i.Config.validateBase()
 
-	if i.Host == "" {
-		return errors.New("неверно задан адрес сервера")
-	}
-
-	return nil
 }
 
 // validate проверяет заполнение обязательных полей метода GetCustomer
@@ -42,15 +38,8 @@ func (i GetCustomerInput) validate() error {
 		return errors.New("неверно задан идентификатор ответственного лица")
 	}
 
-	if i.ApiKey == "" {
-		return errors.New("неверно задан API ключ")
-	}
+	return i.Config.validateBase()
 
-	if i.Host == "" {
-		return errors.New("неверно задан адрес сервера")
-	}
-
-	return nil
 }
 
 // validate проверяет заполнение обязательных полей метода PostCheckPanic
@@ -59,20 +48,12 @@ func (i PostCheckPanicInput) validate() error {
 		return errors.New("неверно задан номер объекта")
 	}
 
-	if i.ApiKey == "" {
-		return errors.New("неверно задан API ключ")
+	if i.CheckInterval != 0 && (i.CheckInterval < 30 || i.CheckInterval > 180) {
+		return errors.New("неверно задано время ожидания проверки, должно быть от 30 до 180 секунд.")
 	}
 
-	if i.Host == "" {
-		return errors.New("неверно задан адрес сервера")
-	}
+	return i.Config.validateBase()
 
-	if i.CheckInterval != 0 {
-		if i.CheckInterval <= 30 || i.CheckInterval >= 180 {
-			return errors.New("неверно задано время ожидания проверки")
-		}
-	}
-	return nil
 }
 
 // validate проверяет заполнение обязательных полей метода GetCheckPanic
@@ -81,15 +62,8 @@ func (i GetCheckPanicInput) validate() error {
 		return errors.New("неверно задан идентификатор проверки")
 	}
 
-	if i.ApiKey == "" {
-		return errors.New("неверно задан API ключ")
-	}
+	return i.Config.validateBase()
 
-	if i.Host == "" {
-		return errors.New("неверно задан адрес сервера")
-	}
-
-	return nil
 }
 
 // validate проверяет заполнение обязательных полей метода GetUsersMyAlarm
@@ -98,15 +72,8 @@ func (i GetUsersMyAlarmInput) validate() error {
 		return errors.New("неверно задан идентификатор объекта")
 	}
 
-	if i.ApiKey == "" {
-		return errors.New("неверно задан API ключ")
-	}
+	return i.Config.validateBase()
 
-	if i.Host == "" {
-		return errors.New("неверно задан адрес сервера")
-	}
-
-	return nil
 }
 
 // validate проверяет заполнение обязательных полей метода GetUserObjectMyAlarm
@@ -119,15 +86,8 @@ func (i GetUserObjectMyAlarmInput) validate() error {
 		return errors.New("неверно задан номер телефона")
 	}
 
-	if i.ApiKey == "" {
-		return errors.New("неверно задан API ключ")
-	}
+	return i.Config.validateBase()
 
-	if i.Host == "" {
-		return errors.New("неверно задан адрес сервера")
-	}
-
-	return nil
 }
 
 // validate проверяет заполнение обязательных полей метода PutChangeUserMyAlarm
@@ -140,15 +100,8 @@ func (i PutChangeUserMyAlarmInput) validate() error {
 		return errors.New("неверно задана роль пользователя")
 	}
 
-	if i.ApiKey == "" {
-		return errors.New("неверно задан API ключ")
-	}
+	return i.Config.validateBase()
 
-	if i.Host == "" {
-		return errors.New("неверно задан адрес сервера")
-	}
-
-	return nil
 }
 
 // validate проверяет заполнение обязательных полей метода PutChangeKTSUserMyAlarm
@@ -157,15 +110,8 @@ func (i PutChangeKTSUserMyAlarmInput) validate() error {
 		return errors.New("неверно задан идентификатор пользователя")
 	}
 
-	if i.ApiKey == "" {
-		return errors.New("неверно задан API ключ")
-	}
+	return i.Config.validateBase()
 
-	if i.Host == "" {
-		return errors.New("неверно задан адрес сервера")
-	}
-
-	return nil
 }
 
 // validate проверяет заполнение обязательных полей метода GetParts
@@ -174,15 +120,8 @@ func (i GetPartsInput) validate() error {
 		return errors.New("неверно задан идентификатор пользователя")
 	}
 
-	if i.ApiKey == "" {
-		return errors.New("неверно задан API ключ")
-	}
+	return i.Config.validateBase()
 
-	if i.Host == "" {
-		return errors.New("неверно задан адрес сервера")
-	}
-
-	return nil
 }
 
 // validate проверяет заполнение обязательных полей метода GetZones
@@ -191,13 +130,6 @@ func (i GetZonesInput) validate() error {
 		return errors.New("неверно задан идентификатор пользователя")
 	}
 
-	if i.ApiKey == "" {
-		return errors.New("неверно задан API ключ")
-	}
+	return i.Config.validateBase()
 
-	if i.Host == "" {
-		return errors.New("неверно задан адрес сервера")
-	}
-
-	return nil
 }
